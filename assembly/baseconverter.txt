@@ -10,6 +10,9 @@
 # HLT, ADD, SUB, STO, LDA,
 # BR, BRZ, BRP, IN, OUT, DAT
 
+#init
+	LDA	s1
+	STO	state
 #inputs
 	IN
 	STO	x
@@ -21,7 +24,7 @@
 	LDA	s10
 	STO	c
 
-	LDA	s0
+repeat	LDA	s0
 	STO	q
 #Split the input into its digits
 #On the second loop it find the digits in the new base
@@ -75,8 +78,20 @@ multi2	STO	c
 multiskip2	LDA	x
 	ADD	d3
 	STO	x
+	LDA	state
+	SUB	s1
+	STO	state
+#if this is the first pass goto prep the variables for a second pass to conver to the final base
+	BRP	prep
+#if it is the second pass output the number
+	LDA	x
 	OUT
 	HLT
+prep	LDA	b
+	STO	c
+	LDA	s10
+	STO	a
+	BR	repeat
 
 divskip2	STO	q
 	LDA	x
@@ -93,6 +108,8 @@ divskip1	STO	x
 	
 
 #data
+state	DAT
+
 x	DAT
 a	DAT
 b	DAT
@@ -106,4 +123,5 @@ c	DAT
 s0	DAT	0
 s1	DAT	1
 s10	DAT	10
+
 

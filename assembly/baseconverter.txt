@@ -41,13 +41,42 @@ div2	LDA	q
 	LDA	q
 	STO	d2
 #digits stored as x,d2,d3
+#two multiplication loops
+#first pass it will convert the number to base 10
+#second pass it will take all the digits of the new base number and make it one number
+
+#using formula (d1*a + d2)*a + d3
 	LDA	x
+	STO	q
+	LDA	a
+	SUB	s1
+multi1	STO	c
+	BRZ	multiskip1 #finished multiplying
+	LDA	x
+	ADD	q
+	STO	x
+	LDA	c
+	SUB	s1
+	BR	multi1
+multiskip1	LDA	x
+	ADD	d2
+	STO	x
+	STO	q
+	LDA	a
+	SUB	s1
+multi2	STO	c
+	BRZ	multiskip2	#finished multiplying
+	LDA	x
+	ADD	q
+	STO	x
+	LDA	c
+	SUB	s1
+	BR	multi2
+multiskip2	LDA	x
+	ADD	d3
+	STO	x
 	OUT
-	LDA	d2
-	OUT
-	LDA	d3
-	OUT
-	HLT	
+	HLT
 
 divskip2	STO	q
 	LDA	x
@@ -77,3 +106,4 @@ c	DAT
 s0	DAT	0
 s1	DAT	1
 s10	DAT	10
+

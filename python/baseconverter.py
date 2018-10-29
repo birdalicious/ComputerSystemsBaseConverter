@@ -24,7 +24,7 @@ def convert(n, a, b):
         n = n//10
     digits = digits[::-1]
     digits = "".join([str(i) for i in convertBase(digits, a, b)])
-    return digits
-
-
-print(convert(684,9,3))
+    if digits == "":
+        return 0
+    else:
+        return int(digits)

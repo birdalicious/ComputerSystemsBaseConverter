@@ -1,0 +1,79 @@
+# Enter assembler code here
+#
+# To add comments begin lines with #
+# Code lines have 3 entries separated by tabs
+# > First an optional label,
+# > second an instruction mnemonic, and 
+# > third an address label if required.
+#
+# Valid mnemonics are:
+# HLT, ADD, SUB, STO, LDA,
+# BR, BRZ, BRP, IN, OUT, DAT
+
+#inputs
+	IN
+	STO	x
+	IN
+	STO	a
+	IN
+	STO	b
+#set up variables for the first pass
+	LDA	s10
+	STO	c
+
+	LDA	s0
+	STO	q
+#Split the input into its digits
+#On the second loop it find the digits in the new base
+div1	LDA	x
+	SUB	c
+	BRP	divskip1 #continue dividing
+#first divison complete - found d3
+	LDA	x
+	STO	d3
+#second division to get d1 and d2
+	LDA	s0
+	STO	x
+div2	LDA	q
+	SUB	c
+	BRP	divskip2 #continue dividing
+#digits now fully separated
+	LDA	q
+	STO	d2
+#digits stored as x,d2,d3
+	LDA	x
+	OUT
+	LDA	d2
+	OUT
+	LDA	d3
+	OUT
+	HLT	
+
+divskip2	STO	q
+	LDA	x
+	ADD	s1
+	STO	x
+	BR	div2	
+	
+divskip1	STO	x
+	LDA	q
+	ADD	s1
+	STO	q
+	BR	div1
+	
+	
+
+#data
+x	DAT
+a	DAT
+b	DAT
+
+d2	DAT
+d3	DAT
+
+q	DAT
+c	DAT
+
+s0	DAT	0
+s1	DAT	1
+s10	DAT	10

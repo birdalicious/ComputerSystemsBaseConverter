@@ -43,6 +43,11 @@ div2	LDA	q
 #digits now fully separated
 	LDA	q
 	STO	d2
+#check overflow
+	LDA	x
+	SUB	b
+	BRP	overflow
+	
 #digits stored as x,d2,d3
 #two multiplication loops
 #first pass it will convert the number to base 10
@@ -104,7 +109,9 @@ divskip1	STO	x
 	ADD	s1
 	STO	q
 	BR	div1
-	
+
+overflow	LDA	s999
+	OUT
 	
 
 #data
@@ -123,5 +130,7 @@ c	DAT
 s0	DAT	0
 s1	DAT	1
 s10	DAT	10
+s999	DAT	999
+
 
 

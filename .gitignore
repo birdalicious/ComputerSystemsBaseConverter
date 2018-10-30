@@ -1,3 +1,6 @@
 LMC1.4.1.exe
 python/batch
 python/__pycache__
+*.batch
+Feedback_*
+*.csv

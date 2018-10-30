@@ -18,16 +18,18 @@
 	STO	x
 	IN
 	STO	a
+	IN
+	STO	b
 #set up variables for the first pass
 	LDA	s10
-	STO	b
+	STO	c
 
 repeat	LDA	s0
 	STO	q
 #Split the input into its digits
 #On the second loop it find the digits in the new base
 div1	LDA	x
-	SUB	b
+	SUB	c
 	BRP	divskip1 #continue dividing
 #first divison complete - found d3
 	LDA	x
@@ -36,7 +38,7 @@ div1	LDA	x
 	LDA	s0
 	STO	x
 div2	LDA	q
-	SUB	b
+	SUB	c
 	BRP	divskip2 #continue dividing
 #digits now fully separated
 	LDA	q
@@ -56,12 +58,12 @@ div2	LDA	q
 	STO	q
 	LDA	a
 	SUB	s1
-multi1	STO	b
+multi1	STO	c
 	BRZ	multiskip1 #finished multiplying
 	LDA	x
 	ADD	q
 	STO	x
-	LDA	b
+	LDA	c
 	SUB	s1
 	BR	multi1
 multiskip1	LDA	x
@@ -70,12 +72,12 @@ multiskip1	LDA	x
 	STO	q
 	LDA	a
 	SUB	s1
-multi2	STO	b
+multi2	STO	c
 	BRZ	multiskip2	#finished multiplying
 	LDA	x
 	ADD	q
 	STO	x
-	LDA	b
+	LDA	c
 	SUB	s1
 	BR	multi2
 multiskip2	LDA	x
@@ -89,9 +91,9 @@ multiskip2	LDA	x
 #if it is the second pass output the number
 	LDA	x
 	OUT
-s0	HLT
-prep	IN
-	STO	b
+	HLT
+prep	LDA	b
+	STO	c
 	LDA	s10
 	STO	a
 	BR	repeat
@@ -123,10 +125,9 @@ d2	DAT
 d3	DAT
 
 q	DAT
+c	DAT
 
+s0	DAT	0
 s1	DAT	1
 s10	DAT	10
 s999	DAT	999
-
-
-

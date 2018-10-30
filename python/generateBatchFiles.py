@@ -2,7 +2,7 @@ from baseconverter import convert
 import random
 import os
 
-testcases = 500
+testcases = 100
 
 cycles = 5000
 includeOverflow = True

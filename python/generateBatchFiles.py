@@ -54,31 +54,31 @@ for base in range(2,11):
 if not os.path.isdir("batch"):		
 	os.mkdir("batch")
 
-f = open("batch/overflow.txt", "w")
+f = open("batch/overflow.batch", "w")
 for l in overflowlines:
 	f.write(l + "\n")
 f.close()
-f = open("batch/tobase10.txt", "w")
+f = open("batch/tobase10.batch", "w")
 for l in tobase10lines:
 	f.write(l + "\n")
 f.close()
-f = open("batch/frombase10.txt", "w")
+f = open("batch/frombase10.batch", "w")
 for l in frombase10lines:
 	f.write(l + "\n")
 f.close()
-f = open("batch/frombaseatobaseb.txt", "w")
+f = open("batch/frombaseatobaseb.batch", "w")
 for l in frombaseatoblines:
 	f.write(l + "\n")
 f.close()
 
-f = open("batch/count.txt", "w")
+f = open("batch/count.batch", "w")
 f.write(overflowcomment + ": " + str(len(overflowlines)) + "\n")
 f.write(tobase10comment + ": " + str(len(tobase10lines)) + "\n")
 f.write(frombase10comment + ": " + str(len(frombase10lines)) + "\n")
 f.write(frombaseatobcomment + ": " + str(len(frombaseatoblines)) + "\n")
 f.close()
 
-f = open("batch/all.txt", "w")
+f = open("batch/all.batch", "w")
 for l in overflowlines:
 	f.write(l + "\n")
 for l in tobase10lines:
@@ -106,7 +106,7 @@ for x in range(1,per):
 for x in range(1,per):
 	testlist.append(frombaseatoblines[random.randint(0,len(frombaseatoblines)-1)])
 
-f = open("batch/testcases.txt", "w")
+f = open("batch/testcases.batch", "w")
 for l in testlist:
 	f.write(l + "\n")
 f.close()

@@ -10,6 +10,8 @@
 # HLT, ADD, SUB, STO, LDA,
 # BR, BRZ, BRP, IN, OUT, DAT
 
+#Test
+
 #init
 	LDA	s1
 	STO	state

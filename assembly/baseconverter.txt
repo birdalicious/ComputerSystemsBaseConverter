@@ -34,6 +34,8 @@ div1	LDA	x
 #first divison complete - found d3
 	LDA	x
 	STO	d3
+	SUB	a
+	BRP	overflow
 #second division to get d1 and d2
 	LDA	s0
 	STO	x
@@ -43,11 +45,13 @@ div2	LDA	q
 #digits now fully separated
 	LDA	q
 	STO	d2
-#check overflow
+	SUB	a
+	BRP	overflow	
+
+#overflow
 	LDA	x
-	SUB	b
+	SUB	a
 	BRP	overflow
-	
 #digits stored as x,d2,d3
 #two multiplication loops
 #first pass it will convert the number to base 10

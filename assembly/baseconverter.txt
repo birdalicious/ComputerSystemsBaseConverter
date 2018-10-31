@@ -18,8 +18,6 @@
 	STO	x
 	IN
 	STO	a
-	IN
-	STO	b
 #set up variables for the first pass
 	LDA	s10
 	STO	c
@@ -54,7 +52,7 @@ div2	LDA	q
 	BRP	overflow
 
 	LDA	x
-	SUB	b
+	SUB	c
 	BRP	overflow
 #digits stored as x,d2,d3
 #two multiplication loops
@@ -99,8 +97,8 @@ multiskip2	LDA	x
 #if it is the second pass output the number
 	LDA	x
 	OUT
-	HLT
-prep	LDA	b
+s0	DAT	0 #using as HLT
+prep	IN
 	STO	c
 	LDA	s10
 	STO	a
@@ -120,14 +118,13 @@ divskip1	STO	x
 
 overflow	LDA	s999
 	OUT
-	
+s1	DAT	1 #HLT
 
 #data
 state	DAT
 
 x	DAT
 a	DAT
-b	DAT
 
 d2	DAT
 d3	DAT
@@ -135,7 +132,9 @@ d3	DAT
 q	DAT
 c	DAT
 
-s0	DAT	0
-s1	DAT	1
 s10	DAT	10
 s999	DAT	999
+
+
+
+

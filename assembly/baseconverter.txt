@@ -1,122 +1,70 @@
-# Enter assembler code here
-#
-# To add comments begin lines with #
-# Code lines have 3 entries separated by tabs
-# > First an optional label,
-# > second an instruction mnemonic, and 
-# > third an address label if required.
-#
-# Valid mnemonics are:
-# HLT, ADD, SUB, STO, LDA,
-# BR, BRZ, BRP, IN, OUT, DAT
-
-#init
-	LDA	s1
-	STO	state
-#inputs
 	IN
 	STO	x
 	IN
 	STO	a
-	IN
-	STO	b
-#set up variables for the first pass
-	LDA	s10
-	STO	c
+	
 
-repeat	LDA	s0
+	LDA	s10
+	STO	b
+	LDA	s0
 	STO	q
-#Split the input into its digits
-#On the second loop it find the digits in the new base
-div1	LDA	x
-	SUB	c
-	BRP	divskip1 #continue dividing
-#first divison complete - found d3
+#split x into its digits
+di1	LDA	x
+	SUB	b
+	BRP	ds1
 	LDA	x
 	STO	d3
-#second division to get d1 and d2
 	LDA	s0
 	STO	x
-div2	LDA	q
-	SUB	c
-	BRP	divskip2 #continue dividing
-#digits now fully separated
+di2	LDA	q
+	SUB	b
+	BRP	ds2
 	LDA	q
 	STO	d2
-#check overflow
-	LDA	x
-	SUB	b
-	BRP	overflow
-	
 #digits stored as x,d2,d3
-#two multiplication loops
-#first pass it will convert the number to base 10
-#second pass it will take all the digits of the new base number and make it one number
-
-#using formula (d1*a + d2)*a + d3
-	LDA	x
-	STO	q
+	LDA	s0
+	STO	b
 	LDA	a
+m1	STO	q
+	BRZ	ms1
+	LDA	b
+	ADD	x
+	STO	b
+	LDA	q
 	SUB	s1
-multi1	STO	c
-	BRZ	multiskip1 #finished multiplying
-	LDA	x
-	ADD	q
-	STO	x
-	LDA	c
-	SUB	s1
-	BR	multi1
-multiskip1	LDA	x
+	BR	m1
+ms1	LDA	b
 	ADD	d2
-	STO	x
-	STO	q
+	STO	b
 	LDA	a
-	SUB	s1
-multi2	STO	c
-	BRZ	multiskip2	#finished multiplying
+m2	STO	x
+	BRZ	ms2
+	LDA	q
+	ADD	b
+	STO	q
 	LDA	x
-	ADD	q
-	STO	x
-	LDA	c
 	SUB	s1
-	BR	multi2
-multiskip2	LDA	x
+	BR	m2
+ms2	LDA	q
 	ADD	d3
-	STO	x
-	LDA	state
-	SUB	s1
-	STO	state
-#if this is the first pass goto prep the variables for a second pass to conver to the final base
-	BRP	prep
-#if it is the second pass output the number
-	LDA	x
 	OUT
 	HLT
-prep	LDA	b
-	STO	c
-	LDA	s10
-	STO	a
-	BR	repeat
+	
+	
 
-divskip2	STO	q
+ds2	STO	q
 	LDA	x
 	ADD	s1
 	STO	x
-	BR	div2	
-	
-divskip1	STO	x
+	BR	di2	
+
+ds1	STO	x
 	LDA	q
 	ADD	s1
 	STO	q
-	BR	div1
-
-overflow	LDA	s999
-	OUT
-	
+	BR	di1	
 
 #data
-state	DAT
-
 x	DAT
 a	DAT
 b	DAT
@@ -125,9 +73,18 @@ d2	DAT
 d3	DAT
 
 q	DAT
-c	DAT
 
 s0	DAT	0
 s1	DAT	1
 s10	DAT	10
-s999	DAT	999
+
+
+
+
+
+
+
+
+
+
+

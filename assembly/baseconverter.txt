@@ -50,7 +50,7 @@ div2	LDA	q
 
 #overflow
 	LDA	x
-	SUB	a
+	SUB	b
 	BRP	overflow
 #digits stored as x,d2,d3
 #two multiplication loops

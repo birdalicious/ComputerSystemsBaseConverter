@@ -7,7 +7,7 @@
 <body>
 	<form action="#">
 		Test cases <input type="text" id="testcases" placeholder="100" value="100"><br>
-		Cycles <input type="text" id="cycles" placeholder="1000" value="1000"><br>
+		Cycles <input type="text" id="cycles" placeholder="1500" value="1500"><br>
 		Include in the batch file: <br>
 		<input type="checkbox" id="intobase10" checked> Into base 10 <br>
 		<input type="checkbox" id="frombase10" checked> From base 10 <br>
@@ -157,6 +157,7 @@
 									line = overflowcomment
 									line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
 									line += ";" + "999" + ";" + cycles.toString()
+									overflowlines.push(line)
 								}
 							}
 						}

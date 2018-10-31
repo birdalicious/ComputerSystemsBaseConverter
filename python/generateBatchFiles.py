@@ -2,10 +2,11 @@ from baseconverter import convert
 import random
 import os
 
-testcases = 100
+testcases = 50
 
 cycles = 5000
-includeOverflow = True
+includeOverflow = False
+trickyinputs = True
 
 
 
@@ -18,6 +19,7 @@ overflowlines = []
 tobase10lines = []
 frombase10lines = []
 frombaseatoblines = []
+trickyinputslist = []
 
 testlist = []
 
@@ -105,6 +107,25 @@ for x in range(1,per):
 	testlist.append(frombase10lines[random.randint(0,len(frombase10lines)-1)])
 for x in range(1,per):
 	testlist.append(frombaseatoblines[random.randint(0,len(frombaseatoblines)-1)])
+
+for x in range(1,per):
+	num = random.randint(0,999)
+	num = str(num)
+	digit = int(num[random.randint(0,len(num)-1)])
+	a = random.randint(0,digit)
+	b = 10
+	line = "tricky inputs;"
+	line += num + "," + str(a) + "," + str(b) + ";" + "999" + ";1000"
+	trickyinputslist.append(line)
+
+f = open("batch/trickyinputs.batch", "w")
+for l in trickyinputslist:
+	f.write(l + "\n")
+f.close()
+
+if trickyinputs:
+	for i in trickyinputslist:
+		testlist.append(i)
 
 f = open("batch/testcases.batch", "w")
 for l in testlist:

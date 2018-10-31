@@ -9,9 +9,12 @@
 # -Overflow (888,9,8;999)
 # -Invalid Numbers (532,4,10;999)
 # -Bases 0 and 1 (123,1,10;999)
-# -0 as output base is invalid to stop inffinate loop
-# -Bases greater than 10 are invalid as there is no 
+# -0 as output base is invalid to stop infinite loop
+# -Bases greater than 10 are invalid as there is no
 #  guarantee of a correct answer (888,11,12;999)
+#
+#Running states
+
 	LDA	s1
 	STO	state
 

@@ -34,6 +34,10 @@
 	$('#download').click(function() {
 		cycles = parseInt(document.getElementById('cycles').value)
 		testcases = parseInt(document.getElementById('testcases').value)
+		overflowlines = []
+		tobase10lines = [];
+		frombase10lines = [];
+		frombaseatoblines = [];
 		generateNormal()
 		data = generateTextFile()
 		download(data, "baseconverter_test.txt", "text/plain;charset=utf-8")

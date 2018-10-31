@@ -1,3 +1,17 @@
+#Base Converter by Jack Bird
+#
+#Features
+# -Convert into base 10
+# -Convert from base 10
+# -Convert between bases
+#
+#Error Handling
+# -Overflow (888,9,8;999)
+# -Invalid Numbers (532,4,10;999)
+# -Bases 0 and 1 (123,1,10;999)
+# -0 as output base is invalid to stop inffinate loop
+# -Bases greater than 10 are invalid as there is no 
+#  guarantee of a correct answer (888,11,12;999)
 	LDA	s1
 	STO	state
 
@@ -5,6 +19,8 @@
 	STO	x
 	IN
 	STO	a
+	SUB	s11
+	BRP	error
 	
 	LDA	s10
 	STO	b
@@ -73,6 +89,9 @@ ms2	LDA	q
 s0	DAT	0	
 prep	IN	
 	STO	b
+	BRZ	error
+	SUB	s11
+	BRP	error
 	LDA	s10
 	STO	a
 	BR	repeat
@@ -106,7 +125,12 @@ q	DAT
 
 s1	DAT	1
 s10	DAT	10
+s11	DAT	11
 s999	DAT	999
+
+
+
+
 
 
 

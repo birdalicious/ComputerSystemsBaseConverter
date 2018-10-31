@@ -118,10 +118,14 @@ for x in range(1,per):
 	line += num + "," + str(a) + "," + str(b) + ";" + "999" + ";1000"
 	trickyinputslist.append(line)
 
+f = open("batch/trickyinputs.batch", "w")
+for l in trickyinputslist:
+	f.write(l + "\n")
+f.close()
 
 if trickyinputs:
-	for x in range(1,per):
-		testlist.append(trickyinputslist[random.randint(0,len(trickyinputslist)-1)])
+	for i in trickyinputslist:
+		testlist.append(i)
 
 f = open("batch/testcases.batch", "w")
 for l in testlist:

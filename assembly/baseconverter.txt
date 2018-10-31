@@ -16,6 +16,8 @@ di1	LDA	x
 	BRP	ds1
 	LDA	x
 	STO	d3
+	SUB	a
+	BRP	error
 	LDA	s0
 	STO	x
 di2	LDA	q
@@ -23,6 +25,12 @@ di2	LDA	q
 	BRP	ds2
 	LDA	q
 	STO	d2
+	SUB	a
+	BRP	error
+	
+	LDA	x
+	SUB	a
+	BRP	error
 #overflow check
 	LDA	x
 	SUB	b
@@ -62,7 +70,7 @@ ms2	LDA	q
 	BRP	prep
 	LDA	x
 	OUT
-	HLT	
+s0	DAT	0	
 prep	IN	
 	STO	b
 	LDA	s10
@@ -96,10 +104,16 @@ d3	DAT
 
 q	DAT
 
-s0	DAT	0
 s1	DAT	1
 s10	DAT	10
 s999	DAT	999
+
+
+
+
+
+
+
 
 
 

@@ -96,7 +96,7 @@ multiskip2	LDA	x
 #if it is the second pass output the number
 	LDA	x
 	OUT
-	HLT
+s0	DAT	0 #using as HLT
 prep	IN
 	STO	c
 	LDA	s10
@@ -117,7 +117,7 @@ divskip1	STO	x
 
 overflow	LDA	s999
 	OUT
-	
+s1	DAT	1 #HLT
 
 #data
 state	DAT
@@ -131,9 +131,9 @@ d3	DAT
 q	DAT
 c	DAT
 
-s0	DAT	0
-s1	DAT	1
 s10	DAT	10
 s999	DAT	999
+
+
 
 

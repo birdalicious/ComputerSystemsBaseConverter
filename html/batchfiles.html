@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Batch File Generator</title>
+</head>
+<body>
+	<form action="#">
+		Test cases <input type="text" id="testcases" placeholder="100" value="100"><br>
+		Cycles <input type="text" id="cycles" placeholder="1000" value="1000"><br>
+		Include in the batch file: <br>
+		<input type="checkbox" id="intobase10" checked> Into base 10 <br>
+		<input type="checkbox" id="frombase10" checked> From base 10 <br>
+		<input type="checkbox" id="frombaseatob" checked> From base a to base b <br>
+		<input type="checkbox" id="overflow"> Overflow <br>
+		<input type="submit" value="Download" id="download"> 
+	</form>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+	overflowcomment = "Overflow"
+	tobase10comment = "Into base 10";
+	frombase10comment = "From base 10";
+	frombaseatobcomment = "From base a to b";
+
+	testcases = 0
+	cycles = 0
+
+	overflowlines = []
+	tobase10lines = [];
+	frombase10lines = [];
+	frombaseatoblines = [];
+
+	$('#download').click(function() {
+		cycles = parseInt(document.getElementById('cycles').value)
+		testcases = parseInt(document.getElementById('testcases').value)
+		generateNormal()
+		data = generateTextFile()
+		download(data, "baseconverter_test.txt", "text/plain;charset=utf-8")
+	});
+
+
+	function generateTextFile() {
+		intobase10 = document.getElementById('intobase10').checked
+		frombase10 = document.getElementById('frombase10').checked
+		frombaseatob = document.getElementById('frombaseatob').checked
+		overflow = document.getElementById('overflow').checked
+		splits = 0
+		splits += intobase10
+		splits += frombase10
+		splits += frombaseatob
+		splits += overflow
+
+		testarray = []
+		testString = ""
+
+		if(intobase10) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				testarray.push(tobase10lines[Math.floor(Math.random() * tobase10lines.length)])	
+			}
+		}
+		if(frombase10) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				testarray.push(frombase10lines[Math.floor(Math.random() * frombase10lines.length)])	
+			}
+		}
+		if(frombaseatob) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				testarray.push(frombaseatoblines[Math.floor(Math.random() * frombaseatoblines.length)])	
+			}
+		}
+		if(overflow) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				testarray.push(overflowlines[Math.floor(Math.random() * overflowlines.length)])	
+			}
+		}
+
+		for(let i = 0; i < testarray.length; i += 1) {
+			testString += testarray[i] + "\r\n"
+		}
+		return testString
+	}
+
+	function download(data, filename, type) {
+	    var file = new Blob([data], {type: type});
+	    if (window.navigator.msSaveOrOpenBlob) // IE10+
+	        window.navigator.msSaveOrOpenBlob(file, filename);
+	    else { // Others
+	        var a = document.createElement("a"),
+	                url = URL.createObjectURL(file);
+	        a.href = url;
+	        a.download = filename;
+	        document.body.appendChild(a);
+	        a.click();
+	        setTimeout(function() {
+	            document.body.removeChild(a);
+	            window.URL.revokeObjectURL(url);  
+	        }, 0); 
+	    }
+	}
+
+	function toDigits(n, b) {
+		let digits = []
+		while(n > 0) {
+			digits.splice(0,0,n % b);
+			n = Math.floor(n/b);
+		}
+		return digits
+	}
+
+	function fromDigits(digits, b) {
+		let n = 0
+		for(let i in digits) {
+			d = digits[i];
+			n = b*n + d;
+		}
+		return n
+	}
+
+	function convert(n, a, b) {
+		let digits = toDigits(n,10);
+		digits = toDigits(fromDigits(digits, a), b).join("");
+		if(digits == "") {
+			return 0
+		} else {
+			return parseInt(digits)
+		}
+	}
+
+	function generateNormal() {
+		for(base = 2; base <= 10; base += 1){
+			for(newbase = 2; newbase <= 10; newbase += 1){
+				if(base != newbase) {
+					for(i = 0; i < base; i+= 1){
+						for(j = 0; j < base; j +=1){
+							for(k = 0; k < base; k += 1) {
+								num = parseInt(i.toString() + j.toString() + k.toString());
+								converted = convert(num,base,newbase)
+								if(converted < 1000) {
+									if(newbase == 10) {
+										line = tobase10comment
+										line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+										line += ";" + converted.toString() + ";" + cycles.toString()
+										tobase10lines.push(line)
+									} else if(base == 10) {
+										line = frombase10comment
+										line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+										line += ";" + converted.toString() + ";" + cycles.toString()
+										frombase10lines.push(line)
+									} else {
+										line = frombaseatobcomment
+										line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+										line += ";" + converted.toString() + ";" + cycles.toString()
+										frombaseatoblines.push(line)
+									}
+								} else {
+									line = overflowcomment
+									line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+									line += ";" + "999" + ";" + cycles.toString()
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+</script>
+</html>

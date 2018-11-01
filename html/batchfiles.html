@@ -14,6 +14,9 @@
 		<input type="checkbox" id="frombaseatob" checked> From base a to base b <br>
 		<input type="checkbox" id="noconversion"> No conversion <br>
 		<input type="checkbox" id="overflow"> Overflow <br>
+		<br>
+		<input type="checkbox" id="includehlt"> Include a stop/start test <br>
+		<br>
 		<input type="submit" value="Download" id="download"> 
 	</form>
 </body>
@@ -52,6 +55,9 @@
 		frombase10 = document.getElementById('frombase10').checked
 		frombaseatob = document.getElementById('frombaseatob').checked
 		overflow = document.getElementById('overflow').checked
+
+		includehlt = document.getElementById('includehlt').checked
+
 		splits = 0
 		splits += intobase10
 		splits += frombase10
@@ -95,6 +101,12 @@
 				testarray.push(overflowlines[index])
 				overflowlines.splice(index,1)
 			}
+		}
+
+		if(includehlt) {
+			line = "Reset test;555,6,7;;150"
+			index = Math.floor(Math.random() * testarray.length - 1)
+			testarray.splice(index,0,line)
 		}
 
 		for(let i = 0; i < testarray.length; i += 1) {

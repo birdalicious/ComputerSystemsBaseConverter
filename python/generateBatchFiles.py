@@ -2,10 +2,10 @@ from baseconverter import convert
 import random
 import os
 
-testcases = 50
+testcases = 400
 
-cycles = 5000
-includeOverflow = False
+cycles = 25000
+includeOverflow = True
 trickyinputs = True
 
 
@@ -14,44 +14,50 @@ overflowcomment = "overflow"
 tobase10comment = "Into base 10"
 frombase10comment = "From base 10"
 frombaseatobcomment = "From base a to b"
+noconversion = "No conversion"
 
 overflowlines = []
 tobase10lines = []
 frombase10lines = []
 frombaseatoblines = []
+noconversionlines = []
 trickyinputslist = []
 
 testlist = []
 
 for base in range(2,11):
 	for newbase in range(2,11):
-		if base != newbase:
-			for i in range(0,base):
-				for j in range(0,base):
-					for k in range(0,base):
-						num = int(str(i)+str(j)+str(k))
-						converted = convert(num,base,newbase)
-						if converted < 1000:
-							if newbase == 10:
-								line = tobase10comment
-								line += ";" + str(num) + "," + str(base) + "," + str(newbase)
-								line += ";" + str(converted) + ";" + str(cycles)
-								tobase10lines.append(line)
-							elif base == 10:
-								line = frombase10comment
-								line += ";" + str(num) + "," + str(base) + "," + str(newbase)
-								line += ";" + str(converted) + ";" + str(cycles)
-								frombase10lines.append(line)
-							else:
-								line = frombaseatobcomment
-								line += ";" + str(num) + "," + str(base) + "," + str(newbase)
-								line += ";" + str(converted) + ";" + str(cycles)
-								frombaseatoblines.append(line)
-						else:
-							line = overflowcomment
+		for i in range(0,base):
+			for j in range(0,base):
+				for k in range(0,base):
+					num = int(str(i)+str(j)+str(k))
+					converted = convert(num,base,newbase)
+					if converted < 1000:
+						if base == newbase:
+							line = noconversion
 							line += ";" + str(num) + "," + str(base) + "," + str(newbase)
-							line += ";999;" + str(cycles)
-							overflowlines.append(line)
+							line += ";" + str(converted) + ";" + str(cycles)
+							noconversionlines.append(line)
+						elif newbase == 10:
+							line = tobase10comment
+							line += ";" + str(num) + "," + str(base) + "," + str(newbase)
+							line += ";" + str(converted) + ";" + str(cycles)
+							tobase10lines.append(line)
+						elif base == 10:
+							line = frombase10comment
+							line += ";" + str(num) + "," + str(base) + "," + str(newbase)
+							line += ";" + str(converted) + ";" + str(cycles)
+							frombase10lines.append(line)
+						else:
+							line = frombaseatobcomment
+							line += ";" + str(num) + "," + str(base) + "," + str(newbase)
+							line += ";" + str(converted) + ";" + str(cycles)
+							frombaseatoblines.append(line)
+					else:
+						line = overflowcomment
+						line += ";" + str(num) + "," + str(base) + "," + str(newbase)
+						line += ";999;" + str(cycles)
+						overflowlines.append(line)
 
 if not os.path.isdir("batch"):		
 	os.mkdir("batch")
@@ -72,12 +78,17 @@ f = open("batch/frombaseatobaseb.batch", "w")
 for l in frombaseatoblines:
 	f.write(l + "\n")
 f.close()
+f = open("batch/noconversion.batch", "w")
+for l in noconversionlines:
+	f.write(l + "\n")
+f.close()
 
-f = open("batch/count.batch", "w")
+f = open("batch/count.txt", "w")
 f.write(overflowcomment + ": " + str(len(overflowlines)) + "\n")
 f.write(tobase10comment + ": " + str(len(tobase10lines)) + "\n")
 f.write(frombase10comment + ": " + str(len(frombase10lines)) + "\n")
 f.write(frombaseatobcomment + ": " + str(len(frombaseatoblines)) + "\n")
+f.write(noconversion + ": " + str(len(noconversionlines)) + "\n")
 f.close()
 
 f = open("batch/all.batch", "w")
@@ -115,7 +126,7 @@ for x in range(1,per):
 	a = random.randint(0,digit)
 	b = 10
 	line = "tricky inputs;"
-	line += num + "," + str(a) + "," + str(b) + ";" + "999" + ";1000"
+	line += num + "," + str(a) + "," + str(b) + ";" + "999" + ";" + str(cycles)
 	trickyinputslist.append(line)
 
 f = open("batch/trickyinputs.batch", "w")

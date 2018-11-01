@@ -12,36 +12,39 @@
 		<input type="checkbox" id="intobase10" checked> Into base 10 <br>
 		<input type="checkbox" id="frombase10" checked> From base 10 <br>
 		<input type="checkbox" id="frombaseatob" checked> From base a to base b <br>
+		<input type="checkbox" id="noconversion"> No conversion <br>
 		<input type="checkbox" id="overflow"> Overflow <br>
 		<input type="submit" value="Download" id="download"> 
 	</form>
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
-	overflowcomment = "Overflow"
-	tobase10comment = "Into base 10";
-	frombase10comment = "Out of base 10";
-	frombaseatobcomment = "Between bases";
-
-	testcases = 0
-	cycles = 0
-
-	overflowlines = []
-	tobase10lines = [];
-	frombase10lines = [];
-	frombaseatoblines = [];
 
 	$('#download').click(function() {
-		cycles = parseInt(document.getElementById('cycles').value)
-		testcases = parseInt(document.getElementById('testcases').value)
+		init();
+		cycles = parseInt(document.getElementById('cycles').value);
+		testcases = parseInt(document.getElementById('testcases').value);
+		generateNormal();
+		data = generateTextFile();
+		download(data, "baseconverter_test.txt", "text/plain;charset=utf-8");
+	});
+
+	function init() {
+		overflowcomment = "Overflow";
+		tobase10comment = "Into base 10";
+		frombase10comment = "Out of base 10";
+		frombaseatobcomment = "Between bases";
+		noconversioncommet = "No conversion";
+
+		testcases = 0;
+		cycles = 0;
+
 		overflowlines = []
 		tobase10lines = [];
 		frombase10lines = [];
 		frombaseatoblines = [];
-		generateNormal()
-		data = generateTextFile()
-		download(data, "baseconverter_test.txt", "text/plain;charset=utf-8")
-	});
+		noconversionlines = [];
+	}
 
 
 	function generateTextFile() {
@@ -60,22 +63,37 @@
 
 		if(intobase10) {
 			for(let i = 0; i < testcases/splits; i+=1) {
-				testarray.push(tobase10lines[Math.floor(Math.random() * tobase10lines.length)])	
+				index = Math.floor(Math.random() * tobase10lines.length)
+				testarray.push(tobase10lines[index])
+				tobase10lines.splice(index, 1)	
 			}
 		}
 		if(frombase10) {
 			for(let i = 0; i < testcases/splits; i+=1) {
-				testarray.push(frombase10lines[Math.floor(Math.random() * frombase10lines.length)])	
+				index = Math.floor(Math.random() * frombase10lines.length)
+				testarray.push(frombase10lines[index])
+				frombase10lines.splice(index,1)	
 			}
 		}
 		if(frombaseatob) {
 			for(let i = 0; i < testcases/splits; i+=1) {
-				testarray.push(frombaseatoblines[Math.floor(Math.random() * frombaseatoblines.length)])	
+				index = Math.floor(Math.random() * frombaseatoblines.length)
+				testarray.push(frombaseatoblines[index])
+				frombaseatoblines.splice(index,1)
+			}
+		}
+		if(noconversion) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				index = Math.floor(Math.random() * noconversionlines.length)
+				testarray.push(noconversionlines[index])
+				noconversionlines.splice(index,1)
 			}
 		}
 		if(overflow) {
 			for(let i = 0; i < testcases/splits; i+=1) {
-				testarray.push(overflowlines[Math.floor(Math.random() * overflowlines.length)])	
+				index = Math.floor(Math.random() * overflowlines.length)
+				testarray.push(overflowlines[index])
+				overflowlines.splice(index,1)
 			}
 		}
 
@@ -134,35 +152,38 @@
 	function generateNormal() {
 		for(base = 2; base <= 10; base += 1){
 			for(newbase = 2; newbase <= 10; newbase += 1){
-				if(base != newbase) {
-					for(i = 0; i < base; i+= 1){
-						for(j = 0; j < base; j +=1){
-							for(k = 0; k < base; k += 1) {
-								num = parseInt(i.toString() + j.toString() + k.toString());
-								converted = convert(num,base,newbase)
-								if(converted < 1000) {
-									if(newbase == 10) {
-										line = tobase10comment
-										line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
-										line += ";" + converted.toString() + ";" + cycles.toString()
-										tobase10lines.push(line)
-									} else if(base == 10) {
-										line = frombase10comment
-										line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
-										line += ";" + converted.toString() + ";" + cycles.toString()
-										frombase10lines.push(line)
-									} else {
-										line = frombaseatobcomment
-										line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
-										line += ";" + converted.toString() + ";" + cycles.toString()
-										frombaseatoblines.push(line)
-									}
-								} else {
-									line = overflowcomment
+				for(i = 0; i < base; i+= 1){
+					for(j = 0; j < base; j +=1){
+						for(k = 0; k < base; k += 1) {
+							num = parseInt(i.toString() + j.toString() + k.toString());
+							converted = convert(num,base,newbase)
+							if(converted < 1000) {
+								if(base == newbase) {
+									line = noconversioncommet
 									line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
-									line += ";" + "999" + ";" + cycles.toString()
-									overflowlines.push(line)
+									line += ";" + converted.toString() + ";" + cycles.toString()
+									noconversionlines.push(line)
+								} else if(newbase == 10) {
+									line = tobase10comment
+									line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+									line += ";" + converted.toString() + ";" + cycles.toString()
+									tobase10lines.push(line)
+								} else if(base == 10) {
+									line = frombase10comment
+									line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+									line += ";" + converted.toString() + ";" + cycles.toString()
+									frombase10lines.push(line)
+								} else {
+									line = frombaseatobcomment
+									line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+									line += ";" + converted.toString() + ";" + cycles.toString()
+									frombaseatoblines.push(line)
 								}
+							} else {
+								line = overflowcomment
+								line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+								line += ";" + "999" + ";" + cycles.toString()
+								overflowlines.push(line)
 							}
 						}
 					}

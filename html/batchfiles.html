@@ -6,73 +6,183 @@
 </head>
 <body>
 	<form action="#">
-		Test cases <input type="text" id="testcases" placeholder="100" value="100"><br>
-		Cycles <input type="text" id="cycles" placeholder="1500" value="1500"><br>
-		Include in the batch file: <br>
-		<input type="checkbox" id="intobase10" checked> Into base 10 <br>
-		<input type="checkbox" id="frombase10" checked> From base 10 <br>
-		<input type="checkbox" id="frombaseatob" checked> From base a to base b <br>
-		<input type="checkbox" id="overflow"> Overflow <br>
-		<input type="submit" value="Download" id="download"> 
+			<div>
+				<div style="display: inline; float: left">
+					Test cases <input type="text" id="testcases" placeholder="100" value="100"><br>
+					Cycles <input type="text" id="cycles" placeholder="1500" value="1500"><br>
+					Include in the batch file: <br>
+					<input type="checkbox" id="intobase10" checked> Into base 10 <br>
+					<input type="checkbox" id="frombase10" checked> From base 10 <br>
+					<input type="checkbox" id="frombaseatob" checked> From base a to base b <br>
+					<input type="checkbox" id="noconversion"> No conversion <br>
+					<input type="checkbox" id="overflow"> Overflow <br>
+					<br>
+					<input type="checkbox" id="includehlt"> Include a stop/start test <br>
+					<br>
+				</div>
+				<div style="display: inline; margin-left: 5px">
+					Tricky Cases <br>
+					<input type="checkbox" id="invalidnumbers"> Invalid numbers <br>
+					<input type="checkbox" id="into01"> Into base 0 and 1 <br>
+					<input type="checkbox" id="out01"> Out of base 0 and 1 <br>
+					<input type="checkbox" id="intogreater10"> Into base greater than 10 <br>
+					<input type="checkbox" id="outofgreater10"> Out of base greater than 10 <br>
+					(A larger number of cycles is recommended for tricky and overflow case) <br><br><br>
+				</div>
+			</div>
+			<input type="submit" value="Download" id="download">
 	</form>
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
-	overflowcomment = "Overflow"
-	tobase10comment = "Into base 10";
-	frombase10comment = "Out of base 10";
-	frombaseatobcomment = "Between bases";
-
-	testcases = 0
-	cycles = 0
-
-	overflowlines = []
-	tobase10lines = [];
-	frombase10lines = [];
-	frombaseatoblines = [];
 
 	$('#download').click(function() {
-		cycles = parseInt(document.getElementById('cycles').value)
-		testcases = parseInt(document.getElementById('testcases').value)
-		generateNormal()
-		data = generateTextFile()
-		download(data, "baseconverter_test.txt", "text/plain;charset=utf-8")
+		init();
+		cycles = parseInt(document.getElementById('cycles').value);
+		testcases = parseInt(document.getElementById('testcases').value);
+		
+		invalidnumbers = document.getElementById('invalidnumbers').checked
+		into01 = document.getElementById('into01').checked
+		out01 = document.getElementById('out01').checked
+		intogreater10 = document.getElementById('intogreater10').checked
+		outofgreater10 = document.getElementById('outofgreater10').checked
+		
+		generateNormal();
+		data = generateTextFile();
+		download(data, "baseconverter_test.txt", "text/plain;charset=utf-8");
 	});
+
+	function init() {
+		overflowcomment = "Overflow";
+		tobase10comment = "Into base 10";
+		frombase10comment = "Out of base 10";
+		frombaseatobcomment = "Between bases";
+		noconversioncommet = "No conversion";
+		
+		invalidcomment = "Invalid numbers";
+		into01comment = "Into base 0 and 1";
+		out01comment = "Out of base 0 and 1";
+		intogreater10comment = "Into base greater than 10";
+		outgreater10comment = "Out of base greater than 10";
+
+		testcases = 0;
+		cycles = 0;
+
+		overflowlines = []
+		tobase10lines = [];
+		frombase10lines = [];
+		frombaseatoblines = [];
+		noconversionlines = [];
+		
+		invalidlines = [];
+		into01lines = [];
+		out01lines = [];
+		intogreater10lines = [];
+		outgreater10lines = [];
+	}
 
 
 	function generateTextFile() {
 		intobase10 = document.getElementById('intobase10').checked
 		frombase10 = document.getElementById('frombase10').checked
 		frombaseatob = document.getElementById('frombaseatob').checked
+		noconversion = document.getElementById('noconversion').checked
 		overflow = document.getElementById('overflow').checked
+
+		includehlt = document.getElementById('includehlt').checked
+
 		splits = 0
 		splits += intobase10
 		splits += frombase10
 		splits += frombaseatob
+		splits += noconversion
 		splits += overflow
+		
+		splits += invalidnumbers
+		splits += into01
+		splits += out01
+		splits += intogreater10
+		splits += outofgreater10
 
 		testarray = []
 		testString = ""
 
 		if(intobase10) {
 			for(let i = 0; i < testcases/splits; i+=1) {
-				testarray.push(tobase10lines[Math.floor(Math.random() * tobase10lines.length)])	
+				index = Math.floor(Math.random() * tobase10lines.length)
+				testarray.push(tobase10lines[index])
+				tobase10lines.splice(index, 1)	
 			}
 		}
 		if(frombase10) {
 			for(let i = 0; i < testcases/splits; i+=1) {
-				testarray.push(frombase10lines[Math.floor(Math.random() * frombase10lines.length)])	
+				index = Math.floor(Math.random() * frombase10lines.length)
+				testarray.push(frombase10lines[index])
+				frombase10lines.splice(index,1)	
 			}
 		}
 		if(frombaseatob) {
 			for(let i = 0; i < testcases/splits; i+=1) {
-				testarray.push(frombaseatoblines[Math.floor(Math.random() * frombaseatoblines.length)])	
+				index = Math.floor(Math.random() * frombaseatoblines.length)
+				testarray.push(frombaseatoblines[index])
+				frombaseatoblines.splice(index,1)
+			}
+		}
+		if(noconversion) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				index = Math.floor(Math.random() * noconversionlines.length)
+				testarray.push(noconversionlines[index])
+				noconversionlines.splice(index,1)
 			}
 		}
 		if(overflow) {
 			for(let i = 0; i < testcases/splits; i+=1) {
-				testarray.push(overflowlines[Math.floor(Math.random() * overflowlines.length)])	
+				index = Math.floor(Math.random() * overflowlines.length)
+				testarray.push(overflowlines[index])
+				overflowlines.splice(index,1)
 			}
+		}
+		
+		if(invalidnumbers) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				index = Math.floor(Math.random() * invalidlines.length)
+				testarray.push(invalidlines[index])
+				invalidlines.splice(index,1)
+			}
+		}
+		if(into01) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				index = Math.floor(Math.random() * into01lines.length)
+				testarray.push(into01lines[index])
+				into01lines.splice(index,1)
+			}
+		}
+		if(out01) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				index = Math.floor(Math.random() * out01lines.length)
+				testarray.push(out01lines[index])
+				out01lines.splice(index,1)
+			}
+		}
+		if(intogreater10) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				index = Math.floor(Math.random() * intogreater10lines.length)
+				testarray.push(intogreater10lines[index])
+				intogreater10lines.splice(index,1)
+			}
+		}
+		if(outofgreater10) {
+			for(let i = 0; i < testcases/splits; i+=1) {
+				index = Math.floor(Math.random() * outgreater10lines.length)
+				testarray.push(outgreater10lines[index])
+				outgreater10lines.splice(index,1)
+			}
+		}
+
+		if(includehlt) {
+			line = "Reset test;555,6,7;;150"
+			index = Math.floor(Math.random() * testarray.length - 1)
+			testarray.splice(index,0,line)
 		}
 
 		for(let i = 0; i < testarray.length; i += 1) {
@@ -130,39 +240,81 @@
 	function generateNormal() {
 		for(base = 2; base <= 10; base += 1){
 			for(newbase = 2; newbase <= 10; newbase += 1){
-				if(base != newbase) {
-					for(i = 0; i < base; i+= 1){
-						for(j = 0; j < base; j +=1){
-							for(k = 0; k < base; k += 1) {
-								num = parseInt(i.toString() + j.toString() + k.toString());
-								converted = convert(num,base,newbase)
-								if(converted < 1000) {
-									if(newbase == 10) {
-										line = tobase10comment
-										line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
-										line += ";" + converted.toString() + ";" + cycles.toString()
-										tobase10lines.push(line)
-									} else if(base == 10) {
-										line = frombase10comment
-										line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
-										line += ";" + converted.toString() + ";" + cycles.toString()
-										frombase10lines.push(line)
-									} else {
-										line = frombaseatobcomment
-										line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
-										line += ";" + converted.toString() + ";" + cycles.toString()
-										frombaseatoblines.push(line)
-									}
-								} else {
-									line = overflowcomment
+				for(i = 0; i < base; i+= 1){
+					for(j = 0; j < base; j +=1){
+						for(k = 0; k < base; k += 1) {
+							num = parseInt(i.toString() + j.toString() + k.toString());
+							converted = convert(num,base,newbase)
+							if(converted < 1000) {
+								if(base == newbase) {
+									line = noconversioncommet
 									line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
-									line += ";" + "999" + ";" + cycles.toString()
-									overflowlines.push(line)
+									line += ";" + converted.toString() + ";" + cycles.toString()
+									noconversionlines.push(line)
+								} else if(newbase == 10) {
+									line = tobase10comment
+									line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+									line += ";" + converted.toString() + ";" + cycles.toString()
+									tobase10lines.push(line)
+								} else if(base == 10) {
+									line = frombase10comment
+									line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+									line += ";" + converted.toString() + ";" + cycles.toString()
+									frombase10lines.push(line)
+								} else {
+									line = frombaseatobcomment
+									line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+									line += ";" + converted.toString() + ";" + cycles.toString()
+									frombaseatoblines.push(line)
 								}
+							} else {
+								line = overflowcomment
+								line += ";" + num.toString() + "," + base.toString() + "," + newbase.toString()
+								line += ";" + "999" + ";" + cycles.toString()
+								overflowlines.push(line)
 							}
 						}
 					}
 				}
+			}
+		}
+		//tricky numbers
+		for(let i = 0; i < testcases; i += 1) {
+			if(invalidnumbers) {
+				num = Math.floor(Math.random() * 1000);
+				digit = parseInt(num.toString()[Math.floor(Math.random() * num.toString().length)]);
+				inbase = Math.floor(Math.random()* (digit+1));
+				line = invalidcomment;
+				line += ";" + num.toString() + "," + inbase.toString() + ",10;999;" + cycles.toString();
+				invalidlines.push(line)
+			}
+			if(into01) {
+				outbase = Math.floor(Math.random()*2)
+				num = Math.floor(Math.random()*1000)
+				line = into01comment
+				line += ";" + num.toString() + ",10," + outbase.toString() + ";999;" + cycles.toString()
+				into01lines.push(line)
+			}
+			if(out01) {
+				outbase = Math.floor(Math.random()*2)
+				num = Math.floor(Math.random()*1000)
+				line = out01comment
+				line += ";" + num.toString() + "," + outbase.toString() + ",10;999;" + cycles.toString()
+				out01lines.push(line)
+			}
+			if(intogreater10) {
+				num = Math.floor(Math.random()*1000)
+				outbase = Math.floor(Math.random()*100)
+				line = intogreater10comment
+				line += ";" + num.toString() + ",10," + outbase.toString() + ";999;" + cycles.toString()
+				intogreater10lines.push(line)
+			}
+			if(outofgreater10) {
+				num = Math.floor(Math.random()*1000)
+				outbase = Math.floor(Math.random()*100)
+				line = outgreater10comment
+				line += ";" + num.toString() + "," + outbase.toString() + ",10;999;" + cycles.toString()
+				outgreater10lines.push(line)
 			}
 		}
 	}

@@ -6,18 +6,25 @@
 </head>
 <body>
 	<form action="#">
-		Test cases <input type="text" id="testcases" placeholder="100" value="100"><br>
-		Cycles <input type="text" id="cycles" placeholder="1500" value="1500"><br>
-		Include in the batch file: <br>
-		<input type="checkbox" id="intobase10" checked> Into base 10 <br>
-		<input type="checkbox" id="frombase10" checked> From base 10 <br>
-		<input type="checkbox" id="frombaseatob" checked> From base a to base b <br>
-		<input type="checkbox" id="noconversion"> No conversion <br>
-		<input type="checkbox" id="overflow"> Overflow <br>
-		<br>
-		<input type="checkbox" id="includehlt"> Include a stop/start test <br>
-		<br>
-		<input type="submit" value="Download" id="download"> 
+			<div>
+				<div style="display: inline; float: left">
+					Test cases <input type="text" id="testcases" placeholder="100" value="100"><br>
+					Cycles <input type="text" id="cycles" placeholder="1500" value="1500"><br>
+					Include in the batch file: <br>
+					<input type="checkbox" id="intobase10" checked> Into base 10 <br>
+					<input type="checkbox" id="frombase10" checked> From base 10 <br>
+					<input type="checkbox" id="frombaseatob" checked> From base a to base b <br>
+					<input type="checkbox" id="noconversion"> No conversion <br>
+					<input type="checkbox" id="overflow"> Overflow <br>
+					<br>
+					<input type="checkbox" id="includehlt"> Include a stop/start test <br>
+					<br>
+				</div>
+				<div style="display: inline; margin-left: 25px">
+					Tricky Cases
+				</div>
+			</div>
+			<input type="submit" value="Download" id="download">
 	</form>
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

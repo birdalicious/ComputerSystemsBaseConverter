@@ -56,6 +56,21 @@
 # | count    |      14376 |
 # | correct  |      14376 |
 # +----------+------------+
+#
+# +---------+-------------+ This has also been tested on a random
+# | Tricky  |             | sample of 4954 tricky input cases
+# +---------+-------------+ which include:
+# | avg     | 1302.270981 | Invalid number
+# | min     |          11 | Conversion into bases 0 and 1
+# | max     |        7092 | Conversion out of bases 0 and 1
+# +---------+-------------+ Conversion into bases greater than 10
+# | Cases   |             | Conversion out of bases greater than 10
+# +---------+-------------+
+# | count   |        4945 |
+# | correct |        4945 |
+# +---------+-------------+
+
+
 
 	LDA	s1
 	STO	state

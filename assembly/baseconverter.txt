@@ -1,5 +1,9 @@
 #Base Converter by Jack Bird
 #
+#When running not in a batch process I would recommend
+#queuing the inputs as the third input is asked for half
+#way through the running time
+#
 #Features
 # -Convert into base 10
 # -Convert from base 10
@@ -8,24 +12,24 @@
 #Error Handling
 # -Overflow (888,9,8;999)
 # -Invalid Numbers (532,4,10;999)
-# -Bases 0 and 1 (123,1,10;999)
+# -Bases 0 and 1 are invalid (123,1,10;999)
 # -0 as output base is invalid to stop infinite loop
 # -Bases greater than 10 are invalid as there is no
 #  guarantee of a correct answer (888,11,12;999)
 #
 #Running states
-# +---------+-------------+
-# | Overall |             |
-# +---------+-------------+
-# | avg     | 896.1666609 |
-# | min     |         297 |
-# | max     |        2153 |
-# +---------+-------------+
-# | Cases   |             |
-# +---------+-------------+
-# | count   |       12840 |
-# | correct |       12840 |
-# +---------+-------------+
+# +------------+-------------+ This is the overall
+# | Overall  Valid Inputs    | stats for all valid
+# +------------+-------------+ cases that don't 
+# | avg cycles | 896.1666609 | return an error code
+# | min        |         297 |
+# | max        |        2153 |
+# +------------+-------------+
+# | Cases      |             |
+# +------------+-------------+
+# | count      |       12840 |
+# | correct    |       12840 |
+# +------------+-------------+
 #
 # +--------------+-------------+   +----------------+------------+   +---------------+-------------+   +---------------+-------------+
 # | Into base 10 |             |   | Out of base 10 |            |   | Between bases |             |   | No conversion |             |
@@ -39,6 +43,19 @@
 # | count        |        2024 |   | count          |       2024 |   | count         |        5768 |   | count         |        3024 |
 # | correct      |        2024 |   | correct        |       2024 |   | correct       |        5768 |   | correct       |        3024 |
 # +--------------+-------------+   +----------------+------------+   +---------------+-------------+   +---------------+-------------+
+#
+# +----------+------------+
+# | Overflow |            |
+# +----------+------------+
+# | avg      | 1829.29584 |
+# | min      |        199 |
+# | max      |       7092 |
+# +----------+------------+
+# | Cases    |            |
+# +----------+------------+ 
+# | count    |      14376 |
+# | correct  |      14376 |
+# +----------+------------+
 
 	LDA	s1
 	STO	state

@@ -19,19 +19,21 @@
 #
 #Running states
 
+
 	LDA	s1
 	STO	state
+	LDA	s10
+	STO	b
 
 	IN
 	STO	x
 	IN
 	STO	a
+repeat	BRZ	error
 	SUB	s11
 	BRP	error
 	
-	LDA	s10
-	STO	b
-repeat	LDA	s0
+	LDA	s0
 	STO	q
 #split x into its digits
 di1	LDA	x
@@ -94,13 +96,10 @@ ms2	LDA	q
 	LDA	x
 	OUT
 s0	DAT	0	
-prep	IN	
-	STO	b
-	BRZ	error
-	SUB	s11
-	BRP	error
-	LDA	s10
+prep	LDA	s10
 	STO	a
+	IN	
+	STO	b
 	BR	repeat
 	
 ds2	STO	q
@@ -134,6 +133,7 @@ s1	DAT	1
 s10	DAT	10
 s11	DAT	11
 s999	DAT	999
+
 
 
 

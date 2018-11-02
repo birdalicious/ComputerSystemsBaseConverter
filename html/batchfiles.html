@@ -304,14 +304,14 @@
 			}
 			if(intogreater10) {
 				num = Math.floor(Math.random()*1000)
-				outbase = Math.floor(Math.random()*100)
+				outbase = Math.floor(Math.random()*(100-11)) +11
 				line = intogreater10comment
 				line += ";" + num.toString() + ",10," + outbase.toString() + ";999;" + cycles.toString()
 				intogreater10lines.push(line)
 			}
 			if(outofgreater10) {
 				num = Math.floor(Math.random()*1000)
-				outbase = Math.floor(Math.random()*100)
+				outbase = Math.floor(Math.random()*(100-11)) +11
 				line = outgreater10comment
 				line += ";" + num.toString() + "," + outbase.toString() + ",10;999;" + cycles.toString()
 				outgreater10lines.push(line)

@@ -1,118 +1,175 @@
-# Enter assembler code here
+#Base Converter by Jack Bird
 #
-# To add comments begin lines with #
-# Code lines have 3 entries separated by tabs
-# > First an optional label,
-# > second an instruction mnemonic, and 
-# > third an address label if required.
+#When running not in a batch process I would recommend
+#queuing the inputs as the third input is asked for half
+#way through the running time
 #
-# Valid mnemonics are:
-# HLT, ADD, SUB, STO, LDA,
-# BR, BRZ, BRP, IN, OUT, DAT
+#Features
+# -Convert into base 10
+# -Convert from base 10
+# -Convert between bases
+#
+#Error Handling
+# -Overflow (888,9,8;999)
+# -Invalid Numbers (532,4,10;999)
+# -Bases 0 and 1 are invalid (123,1,10;999)
+# -0 as output base is invalid to stop infinite loop
+# -Bases greater than 10 are invalid as there is no
+#  guarantee of a correct answer (888,11,12;999)
+#
+#Running states
+# +------------+-------------+ This is the overall
+# | Overall  Valid Inputs    | stats for all valid
+# +------------+-------------+ cases that don't 
+# | avg cycles | 896.1666609 | return an error code
+# | min        |         297 |
+# | max        |        2153 |
+# +------------+-------------+
+# | Cases      |             |
+# +------------+-------------+
+# | count      |       12840 |
+# | correct    |       12840 |
+# +------------+-------------+
+#
+# +--------------+-------------+   +----------------+------------+   +---------------+-------------+   +---------------+-------------+
+# | Into base 10 |             |   | Out of base 10 |            |   | Between bases |             |   | No conversion |             |
+# +--------------+-------------+   +----------------+------------+   +---------------+-------------+   +---------------+-------------+
+# | avg cycles   | 906.8063241 |   | avg            | 891.083004 |   | avg           | 716.0471567 |   | avg           | 1070.730159 |
+# | min          |         297 |   | min            |        425 |   | min           |         297 |   | min           |         297 |
+# | max          |        1809 |   | max            |       1761 |   | max           |        1561 |   | max           |        2153 |
+# +--------------+-------------+   +----------------+------------+   +---------------+-------------+   +---------------+-------------+ 
+# | Cases        |             |   | Cases          |            |   | Cases         |             |   | Cases         |             |
+# +--------------+-------------+   +----------------+------------+   +---------------+-------------+   +---------------+-------------+
+# | count        |        2024 |   | count          |       2024 |   | count         |        5768 |   | count         |        3024 |
+# | correct      |        2024 |   | correct        |       2024 |   | correct       |        5768 |   | correct       |        3024 |
+# +--------------+-------------+   +----------------+------------+   +---------------+-------------+   +---------------+-------------+
+#
+# +----------+------------+
+# | Overflow |            |
+# +----------+------------+
+# | avg      | 1829.29584 |
+# | min      |        199 |
+# | max      |       7092 |
+# +----------+------------+
+# | Cases    |            |
+# +----------+------------+ 
+# | count    |      14376 |
+# | correct  |      14376 |
+# +----------+------------+
+#
+# +---------+-------------+ This has also been tested on a random
+# | Tricky  |             | sample of 4954 tricky input cases
+# +---------+-------------+ which include:
+# | avg     | 1302.270981 | Invalid number
+# | min     |          11 | Conversion into bases 0 and 1
+# | max     |        7092 | Conversion out of bases 0 and 1
+# +---------+-------------+ Conversion into bases greater than 10
+# | Cases   |             | Conversion out of bases greater than 10
+# +---------+-------------+
+# | count   |        4945 |
+# | correct |        4945 |
+# +---------+-------------+
 
-#init
+
+
 	LDA	s1
 	STO	state
-#inputs
+
 	IN
 	STO	x
 	IN
 	STO	a
-	IN
-	STO	b
-#set up variables for the first pass
+	SUB	s11
+	BRP	error
+	
 	LDA	s10
-	STO	c
-
+	STO	b
 repeat	LDA	s0
 	STO	q
-#Split the input into its digits
-#On the second loop it find the digits in the new base
-div1	LDA	x
-	SUB	c
-	BRP	divskip1 #continue dividing
-#first divison complete - found d3
+#split x into its digits
+di1	LDA	x
+	SUB	b
+	BRP	ds1
 	LDA	x
 	STO	d3
-#second division to get d1 and d2
+	SUB	a
+	BRP	error
 	LDA	s0
 	STO	x
-div2	LDA	q
-	SUB	c
-	BRP	divskip2 #continue dividing
-#digits now fully separated
+di2	LDA	q
+	SUB	b
+	BRP	ds2
 	LDA	q
 	STO	d2
-#check overflow
+	SUB	a
+	BRP	error
+	
+	LDA	x
+	SUB	a
+	BRP	error
+#overflow check
 	LDA	x
 	SUB	b
-	BRP	overflow
-	
-#digits stored as x,d2,d3
-#two multiplication loops
-#first pass it will convert the number to base 10
-#second pass it will take all the digits of the new base number and make it one number
+	BRP	error
 
-#using formula (d1*a + d2)*a + d3
-	LDA	x
-	STO	q
+#digits stored as x,d2,d3
+	LDA	s0
+	STO	b
 	LDA	a
+m1	STO	q
+	BRZ	ms1
+	LDA	b
+	ADD	x
+	STO	b
+	LDA	q
 	SUB	s1
-multi1	STO	c
-	BRZ	multiskip1 #finished multiplying
-	LDA	x
-	ADD	q
-	STO	x
-	LDA	c
-	SUB	s1
-	BR	multi1
-multiskip1	LDA	x
+	BR	m1
+ms1	LDA	b
 	ADD	d2
-	STO	x
-	STO	q
+	STO	b
 	LDA	a
-	SUB	s1
-multi2	STO	c
-	BRZ	multiskip2	#finished multiplying
+m2	STO	x
+	BRZ	ms2
+	LDA	q
+	ADD	b
+	STO	q
 	LDA	x
-	ADD	q
-	STO	x
-	LDA	c
 	SUB	s1
-	BR	multi2
-multiskip2	LDA	x
+	BR	m2
+ms2	LDA	q
 	ADD	d3
 	STO	x
+	
 	LDA	state
 	SUB	s1
 	STO	state
-#if this is the first pass goto prep the variables for a second pass to conver to the final base
 	BRP	prep
-#if it is the second pass output the number
 	LDA	x
 	OUT
-	HLT
-prep	LDA	b
-	STO	c
+s0	DAT	0	
+prep	IN	
+	STO	b
+	BRZ	error
+	SUB	s11
+	BRP	error
 	LDA	s10
 	STO	a
 	BR	repeat
-
-divskip2	STO	q
+	
+ds2	STO	q
 	LDA	x
 	ADD	s1
 	STO	x
-	BR	div2	
-	
-divskip1	STO	x
+	BR	di2	
+
+ds1	STO	x
 	LDA	q
 	ADD	s1
 	STO	q
-	BR	div1
+	BR	di1
 
-overflow	LDA	s999
+error	LDA	s999
 	OUT
-	
 
 #data
 state	DAT
@@ -125,9 +182,31 @@ d2	DAT
 d3	DAT
 
 q	DAT
-c	DAT
 
-s0	DAT	0
 s1	DAT	1
 s10	DAT	10
+s11	DAT	11
 s999	DAT	999
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -19,9 +19,6 @@
 #
 #Running states
 
-
-	LDA	s1
-	STO	state
 	LDA	s10
 	STO	b
 
@@ -41,8 +38,7 @@ di1	LDA	x
 	BRP	ds1
 	LDA	x
 	STO	d3
-	SUB	a
-	BRP	error
+
 	LDA	s0
 	STO	x
 di2	LDA	q
@@ -51,14 +47,6 @@ di2	LDA	q
 	LDA	q
 	STO	d2
 	SUB	a
-	BRP	error
-	
-	LDA	x
-	SUB	a
-	BRP	error
-#overflow check
-	LDA	x
-	SUB	b
 	BRP	error
 
 #digits stored as x,d2,d3
@@ -88,19 +76,8 @@ m2	STO	x
 ms2	LDA	q
 	ADD	d3
 	STO	x
-	
-	LDA	state
-	SUB	s1
-	STO	state
-	BRP	prep
-	LDA	x
 	OUT
-s0	DAT	0	
-prep	LDA	s10
-	STO	a
-	IN	
-	STO	b
-	BR	repeat
+	HLT
 	
 ds2	STO	q
 	LDA	x

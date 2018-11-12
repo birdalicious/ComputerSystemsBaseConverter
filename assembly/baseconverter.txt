@@ -1,5 +1,3 @@
-#Base Converter by Jack Bird
-#
 #When running not in a batch process I would recommend
 #queuing the inputs as the third input is asked for half
 #way through the running time
@@ -16,10 +14,6 @@
 # -0 as output base is invalid to stop infinite loop
 # -Bases greater than 10 are invalid as there is no
 #  guarantee of a correct answer (888,11,12;999)
-#
-#Running states
-
-
 
 
 	LDA	s1

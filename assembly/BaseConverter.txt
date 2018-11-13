@@ -14,6 +14,24 @@
 # -0 as output base is invalid to stop infinite loop
 # -Bases greater than 10 are invalid as there is no
 #  guarantee of a correct answer (888,11,12;999)
+#
+#Method
+# 1. Split input number into digits by dividing by 10
+#    the modulo is the third digit, divide the quotient by 10,
+#    the modulo is the second digit and the quotent the first
+# 2. As the digits are found and stored, subtract the input base,
+#    if the result if positive then the input number is invalid.
+#    This is also where overflow is checked for on the second pass
+# 3. Find the input number in base 10 using the forumla:
+#    (d1*a+d2)*a+d3 where a is the input base and d1,d2,d3 are
+#    the digits of the input number
+# 4. Repeat steps 1 to 3 to convert out of base 10 to the output
+#    base. Instead of dividing by 10, divide by the output base.
+#    The variable 'a' which was the input base is now changed to 10
+#    so the invalid number checks don't matter and step 3 builds
+#    the output number. Checking for overflow in step 2 is just 
+#    subtracting the output base from the final digit, if it 
+#    positive then there is overflow
 
 	LDA	s1
 	STO	state

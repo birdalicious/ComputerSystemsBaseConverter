@@ -10,7 +10,7 @@
 #Error Handling
 # -Overflow (888,9,8;999)
 # -Invalid Numbers (532,4,10;999)
-# -Bases 0 and 1 are invalid (123,1,10;999)
+# -Bases 0 and 1 are invalid (123,1,10;999) but 0 in base 1 will be processed (0,1,7;0)
 # -0 as output base is invalid to stop infinite loop
 # -Bases greater than 10 are invalid as there is no
 #  guarantee of a correct answer (888,11,12;999)
